@@ -7,7 +7,7 @@ require './lib/Piece.rb'
 
 class WhiteKnight < White
   attr_reader :avatar, :start_pos
-  attr_accessor :moves
+  attr_accessor :moves, :current_pos
 
   def initialize(x_pos, y_pos)
     @avatar = "\u2658"
@@ -49,7 +49,7 @@ end
 
 class BlackKnight < Black
   attr_reader :avatar, :start_pos
-  attr_accessor :moves
+  attr_accessor :moves, :current_pos
 
   def initialize(x_pos, y_pos)
     @avatar = "\u265e"

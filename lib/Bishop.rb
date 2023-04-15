@@ -7,7 +7,7 @@ require './lib/Piece.rb'
 
 class WhiteBishop < White
   attr_reader :avatar, :start_pos
-  attr_accessor :moves
+  attr_accessor :moves, :current_pos
 
   def initialize(x_pos, y_pos)
     @avatar = "\u2657"
@@ -28,7 +28,7 @@ class WhiteBishop < White
 
       ghost_move = [ghost_move[0] + 1, ghost_move[1] + 1]
     end
-    puts "#{count} moves Up-right"
+    # puts "#{count} moves Up-right"
 
     ghost_move = [@current_pos[0] + 1, @current_pos[1] - 1]
     count = 0
@@ -39,7 +39,7 @@ class WhiteBishop < White
 
       ghost_move = [ghost_move[0] + 1, ghost_move[1] - 1]
     end
-    puts "#{count} moves down-right"
+    # puts "#{count} moves down-right"
 
     ghost_move = [@current_pos[0] - 1, @current_pos[1] + 1]
     count = 0
@@ -50,7 +50,7 @@ class WhiteBishop < White
 
       ghost_move = [ghost_move[0] - 1, ghost_move[1] + 1]
     end
-    puts "#{count} moves up-left"
+    # puts "#{count} moves up-left"
 
     ghost_move = [@current_pos[0] - 1, @current_pos[1] - 1]
     count = 0
@@ -61,7 +61,7 @@ class WhiteBishop < White
 
       ghost_move = [ghost_move[0] - 1, ghost_move[1] - 1]
     end
-    puts "#{count} moves down-left"
+    # puts "#{count} moves down-left"
 
     @legal_moves
   end
@@ -69,7 +69,7 @@ end
 
 class BlackBishop < Black
   attr_reader :avatar, :start_pos
-  attr_accessor :moves
+  attr_accessor :moves, :current_pos
 
   def initialize(x_pos, y_pos)
     @avatar = "\u265d"
@@ -90,7 +90,7 @@ class BlackBishop < Black
 
       ghost_move = [ghost_move[0] + 1, ghost_move[1] + 1]
     end
-    puts "#{count} moves Up-right"
+    # puts "#{count} moves Up-right"
 
     ghost_move = [@current_pos[0] + 1, @current_pos[1] - 1]
     count = 0
@@ -101,7 +101,7 @@ class BlackBishop < Black
 
       ghost_move = [ghost_move[0] + 1, ghost_move[1] - 1]
     end
-    puts "#{count} moves down-right"
+    # puts "#{count} moves down-right"
 
     ghost_move = [@current_pos[0] - 1, @current_pos[1] + 1]
     count = 0
@@ -112,7 +112,7 @@ class BlackBishop < Black
 
       ghost_move = [ghost_move[0] - 1, ghost_move[1] + 1]
     end
-    puts "#{count} moves up-left"
+    # puts "#{count} moves up-left"
 
     ghost_move = [@current_pos[0] - 1, @current_pos[1] - 1]
     count = 0
@@ -123,7 +123,7 @@ class BlackBishop < Black
 
       ghost_move = [ghost_move[0] - 1, ghost_move[1] - 1]
     end
-    puts "#{count} moves down-left"
+    # puts "#{count} moves down-left"
 
     @legal_moves
   end
