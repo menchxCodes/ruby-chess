@@ -18,15 +18,19 @@ class Piece
 end
 
 class White < Piece
+  attr_accessor :pieces, :lost
+
   def initialize
-    @white_pieces = []
-    @white_lost = []
+    @pieces = []
+    @lost = []
   end
 end
 
 class Black < Piece
+  attr_accessor :pieces, :lost
+
   def initialize
-    @black_pieces = []
-    @black_lost = []
+    @pieces = []
+    @lost = []
   end
 end
