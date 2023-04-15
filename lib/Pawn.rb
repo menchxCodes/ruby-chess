@@ -1,4 +1,6 @@
 require './lib/Board.rb'
+require './lib/Bishop.rb'
+require './lib/Rook.rb'
 require './lib/Piece.rb'
 
 class WhitePawn < White

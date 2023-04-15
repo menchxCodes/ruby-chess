@@ -1,4 +1,7 @@
 require './lib/Pawn.rb'
+
+require './lib/Rook.rb'
+require './lib/Bishop.rb'
 require './lib/Piece.rb'
 
 class Board
