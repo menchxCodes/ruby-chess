@@ -1,7 +1,8 @@
 require './lib/Pawn.rb'
-
 require './lib/Rook.rb'
 require './lib/Bishop.rb'
+require './lib/Queen.rb'
+require './lib/Knight.rb'
 require './lib/Piece.rb'
 
 class Board
@@ -61,5 +62,3 @@ class Board
     end
   end
 end
-
-

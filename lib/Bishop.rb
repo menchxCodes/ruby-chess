@@ -1,11 +1,14 @@
 require './lib/Board.rb'
 require './lib/Pawn.rb'
 require './lib/Rook.rb'
+require './lib/Queen.rb'
+require './lib/Knight.rb'
 require './lib/Piece.rb'
 
 class WhiteBishop < White
-    attr_reader :avatar, :start_pos
-    attr_accessor :moves
+  attr_reader :avatar, :start_pos
+  attr_accessor :moves
+
   def initialize(x_pos, y_pos)
     @avatar = "\u2657"
     @start_pos = [x_pos, y_pos]
@@ -22,6 +25,7 @@ class WhiteBishop < White
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+
       ghost_move = [ghost_move[0] + 1, ghost_move[1] + 1]
     end
     puts "#{count} moves Up-right"
@@ -32,6 +36,7 @@ class WhiteBishop < White
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+
       ghost_move = [ghost_move[0] + 1, ghost_move[1] - 1]
     end
     puts "#{count} moves down-right"
@@ -42,6 +47,7 @@ class WhiteBishop < White
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+
       ghost_move = [ghost_move[0] - 1, ghost_move[1] + 1]
     end
     puts "#{count} moves up-left"
@@ -52,6 +58,7 @@ class WhiteBishop < White
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+
       ghost_move = [ghost_move[0] - 1, ghost_move[1] - 1]
     end
     puts "#{count} moves down-left"
@@ -61,8 +68,9 @@ class WhiteBishop < White
 end
 
 class BlackBishop < Black
-    attr_reader :avatar, :start_pos
-    attr_accessor :moves
+  attr_reader :avatar, :start_pos
+  attr_accessor :moves
+
   def initialize(x_pos, y_pos)
     @avatar = "\u265d"
     @start_pos = [x_pos, y_pos]
@@ -79,6 +87,7 @@ class BlackBishop < Black
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+
       ghost_move = [ghost_move[0] + 1, ghost_move[1] + 1]
     end
     puts "#{count} moves Up-right"
@@ -89,6 +98,7 @@ class BlackBishop < Black
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+
       ghost_move = [ghost_move[0] + 1, ghost_move[1] - 1]
     end
     puts "#{count} moves down-right"
@@ -99,6 +109,7 @@ class BlackBishop < Black
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+
       ghost_move = [ghost_move[0] - 1, ghost_move[1] + 1]
     end
     puts "#{count} moves up-left"
@@ -109,6 +120,7 @@ class BlackBishop < Black
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+
       ghost_move = [ghost_move[0] - 1, ghost_move[1] - 1]
     end
     puts "#{count} moves down-left"
