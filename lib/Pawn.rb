@@ -19,16 +19,16 @@ class WhitePawn < White
   def legal_moves(board)
     @legal_moves = []
     # single-forward_move
+    return @legal_moves if @current_pos[1] == 8
     unless board.piece_at(@current_pos[0], @current_pos[1] + 1).kind_of?(Piece) && @current_pos[1] != 8
       # puts 'single-forward_move'
       @legal_moves.push([@current_pos[0], @current_pos[1] + 1])
     end
 
     # double-forward-move
-    blocked_forward = board.piece_at(@current_pos[0], @current_pos[1] + 1).kind_of?(Piece) || board.piece_at(@current_pos[0], @current_pos[1] + 2).kind_of?(Piece)
-    if @moves.empty? && !blocked_forward
-      # puts 'double-forward-move'
-      @legal_moves.push([@current_pos[0], @current_pos[1] + 2])
+    if @moves.empty?
+      blocked_forward = board.piece_at(@current_pos[0], @current_pos[1] + 1).kind_of?(Piece) || board.piece_at(@current_pos[0], @current_pos[1] + 2).kind_of?(Piece)
+      @legal_moves.push([@current_pos[0], @current_pos[1] + 2]) unless blocked_forward
     end
 
     #left-attack
@@ -60,6 +60,8 @@ class BlackPawn < Black
 
   def legal_moves(board)
     @legal_moves = []
+    return @legal_moves if @current_pos[1] == 1
+
     # single-forward_move
     unless board.piece_at(@current_pos[0], @current_pos[1] - 1).kind_of?(Piece) && @current_pos[1] != 1
       # puts 'single-forward_move'
@@ -67,10 +69,9 @@ class BlackPawn < Black
     end
 
     # double-forward-move
-    blocked_forward = board.piece_at(@current_pos[0], @current_pos[1] - 1).kind_of?(Piece) || board.piece_at(@current_pos[0], @current_pos[1] - 2).kind_of?(Piece)
-    if @moves.empty? && !blocked_forward
-      # puts 'double-forward-move'
-      @legal_moves.push([@current_pos[0], @current_pos[1] - 2])
+    if @moves.empty?
+      blocked_forward = board.piece_at(@current_pos[0], @current_pos[1] - 1).kind_of?(Piece) || board.piece_at(@current_pos[0], @current_pos[1] - 2).kind_of?(Piece)
+      @legal_moves.push([@current_pos[0], @current_pos[1] - 2]) unless blocked_forward
     end
 
     # left-attack
