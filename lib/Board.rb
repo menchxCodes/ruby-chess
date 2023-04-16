@@ -12,6 +12,33 @@ class Board
     @board = create_board
     @player_one = White.new
     @player_two = Black.new
+    @current_player = @player_one
+  end
+
+  def random_loop
+    loop_count = 0
+    until calculate_legals(@current_player).empty?
+      loop_count += 1
+      do_random_legal_move(@current_player)
+      print_board
+      puts loop_count
+      change_player
+      puts "#{@current_player} turn"
+    end
+  end
+
+  def change_player(player = @current_player)
+    case player
+    when @player_one
+      @current_player = @player_two
+    when @player_two
+      @current_player = @player_one
+    end
+  end
+
+  def opposite_player(player = @current_player)
+    return @player_one if player == @player_two
+    @player_two
   end
 
   def calculate_legals(player)
@@ -19,11 +46,34 @@ class Board
     player.pieces.each do |piece|
       legals = Array.new(2) {Array.new}
       moves = piece.legal_moves(self)
-      legals[0] = piece.start_pos unless moves.empty?
+
+      legals[0] = piece.current_pos unless moves.empty?
       legals[1].replace(moves) unless moves.empty?
       output << legals unless moves.empty?
     end
     output
+  end
+
+  def do_random_legal_move(player)
+    legals = calculate_legals(player)
+    sample = legals.sample
+    random_piece = sample[0]
+    return if random_piece.nil?
+
+    random_move = sample[1].sample
+    puts "movable pieces=#{legals.size} legal moves= #{sample[1].size}"
+    puts "piece:#{random_piece} move:#{random_move}"
+
+    piece = piece_at(random_piece[0], random_piece[1])
+    piece.moves.push(random_move)
+    target_piece = piece_at(random_move[0],random_move[1])
+    if target_piece.is_a?(Piece)
+      opposite_player.lost << target_piece
+      opposite_player.pieces.delete(target_piece)
+    end
+    @board[random_move[1]][random_move[0]] = piece
+    piece.current_pos = [random_move[0], random_move[1]]
+    @board[random_piece[1]][random_piece[0]] = ' '
   end
 
   def create_board
@@ -53,6 +103,13 @@ class Board
       puts string
       puts '------------------------------------'
     end
+    white_lost = "white-lost:"
+    @player_one.lost.each {|piece| white_lost.concat(piece.avatar) }
+    puts white_lost
+
+    black_lost = "black-lost:"
+    @player_two.lost.each {|piece| black_lost.concat(piece.avatar) }
+    puts black_lost
   end
 
   def piece_at(x_pos, y_pos)
