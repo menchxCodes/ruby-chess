@@ -3,6 +3,7 @@ require './lib/Pawn'
 require './lib/Rook'
 require './lib/Bishop'
 require './lib/Queen.rb'
+require './lib/King.rb'
 require './lib/Knight.rb'
 
 class Piece
