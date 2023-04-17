@@ -27,10 +27,11 @@ class WhiteKing < King
   def legal_moves(board)
     @legal_moves = []
 
-    ghost_move = [@current_pos[0] + 1, @current_pos[1] + 1]
+    ghost_move = [@current_pos[0], @current_pos[1] + 1]
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -38,6 +39,7 @@ class WhiteKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -45,6 +47,7 @@ class WhiteKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -52,6 +55,7 @@ class WhiteKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -59,6 +63,7 @@ class WhiteKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -66,6 +71,7 @@ class WhiteKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -73,6 +79,7 @@ class WhiteKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -80,9 +87,10 @@ class WhiteKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
-
+    ghost_perm = []
     @legal_moves
   end
 end
@@ -101,10 +109,11 @@ class BlackKing < King
   def legal_moves(board)
     @legal_moves = []
 
-    ghost_move = [@current_pos[0] + 1, @current_pos[1] + 1]
+    ghost_move = [@current_pos[0], @current_pos[1] + 1]
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -112,6 +121,7 @@ class BlackKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -119,6 +129,7 @@ class BlackKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -126,6 +137,7 @@ class BlackKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -133,6 +145,7 @@ class BlackKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -140,6 +153,7 @@ class BlackKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -147,6 +161,7 @@ class BlackKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
@@ -154,6 +169,7 @@ class BlackKing < King
     unless !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
                                                         ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
                                                                                                       ghost_move[1]).is_a?(King)
+
       @legal_moves.push(ghost_move)
     end
 
