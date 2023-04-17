@@ -1,9 +1,10 @@
-require './lib/Board.rb'
-require './lib/Pawn.rb'
-require './lib/Rook.rb'
-require './lib/Queen.rb'
-require './lib/Knight.rb'
-require './lib/Piece.rb'
+require './lib/Board'
+require './lib/Pawn'
+require './lib/Rook'
+require './lib/Queen'
+require './lib/Knight'
+require './lib/King'
+require './lib/Piece'
 
 class WhiteBishop < White
   attr_reader :avatar, :start_pos
@@ -21,10 +22,10 @@ class WhiteBishop < White
 
     ghost_move = [@current_pos[0] + 1, @current_pos[1] + 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(King)
       @legal_moves.push(ghost_move)
       count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
 
       ghost_move = [ghost_move[0] + 1, ghost_move[1] + 1]
     end
@@ -32,10 +33,10 @@ class WhiteBishop < White
 
     ghost_move = [@current_pos[0] + 1, @current_pos[1] - 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(King)
       @legal_moves.push(ghost_move)
       count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
 
       ghost_move = [ghost_move[0] + 1, ghost_move[1] - 1]
     end
@@ -43,10 +44,10 @@ class WhiteBishop < White
 
     ghost_move = [@current_pos[0] - 1, @current_pos[1] + 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(King)
       @legal_moves.push(ghost_move)
       count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
 
       ghost_move = [ghost_move[0] - 1, ghost_move[1] + 1]
     end
@@ -54,10 +55,10 @@ class WhiteBishop < White
 
     ghost_move = [@current_pos[0] - 1, @current_pos[1] - 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(King)
       @legal_moves.push(ghost_move)
       count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
 
       ghost_move = [ghost_move[0] - 1, ghost_move[1] - 1]
     end
@@ -83,10 +84,10 @@ class BlackBishop < Black
 
     ghost_move = [@current_pos[0] + 1, @current_pos[1] + 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(King)
       @legal_moves.push(ghost_move)
       count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
 
       ghost_move = [ghost_move[0] + 1, ghost_move[1] + 1]
     end
@@ -94,10 +95,10 @@ class BlackBishop < Black
 
     ghost_move = [@current_pos[0] + 1, @current_pos[1] - 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(King)
       @legal_moves.push(ghost_move)
       count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
 
       ghost_move = [ghost_move[0] + 1, ghost_move[1] - 1]
     end
@@ -105,10 +106,10 @@ class BlackBishop < Black
 
     ghost_move = [@current_pos[0] - 1, @current_pos[1] + 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(King)
       @legal_moves.push(ghost_move)
       count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
 
       ghost_move = [ghost_move[0] - 1, ghost_move[1] + 1]
     end
@@ -116,10 +117,10 @@ class BlackBishop < Black
 
     ghost_move = [@current_pos[0] - 1, @current_pos[1] - 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0], ghost_move[1]).is_a?(King)
       @legal_moves.push(ghost_move)
       count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
 
       ghost_move = [ghost_move[0] - 1, ghost_move[1] - 1]
     end
