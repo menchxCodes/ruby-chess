@@ -3,6 +3,7 @@ require './lib/Pawn.rb'
 require './lib/Bishop.rb'
 require './lib/Rook.rb'
 require './lib/Queen.rb'
+require './lib/King.rb'
 require './lib/Piece.rb'
 
 class WhiteKnight < White
@@ -20,28 +21,28 @@ class WhiteKnight < White
     @legal_moves = []
 
     move = [@current_pos[0] + 1, @current_pos[1] + 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] + 1, @current_pos[1] - 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] - 1, @current_pos[1] + 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] - 1, @current_pos[1] - 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] + 2, @current_pos[1] + 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] + 2, @current_pos[1] - 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] - 2, @current_pos[1] + 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] - 2, @current_pos[1] - 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
 
     @legal_moves
   end
@@ -62,28 +63,28 @@ class BlackKnight < Black
     @legal_moves = []
 
     move = [@current_pos[0] + 1, @current_pos[1] + 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] + 1, @current_pos[1] - 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] - 1, @current_pos[1] + 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] - 1, @current_pos[1] - 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] + 2, @current_pos[1] + 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] + 2, @current_pos[1] - 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] - 2, @current_pos[1] + 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
 
     move = [@current_pos[0] - 2, @current_pos[1] - 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black)
+    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
 
     @legal_moves
   end
