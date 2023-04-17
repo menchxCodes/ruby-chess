@@ -3,6 +3,7 @@ require './lib/Pawn.rb'
 require './lib/Bishop.rb'
 require './lib/Queen.rb'
 require './lib/Knight.rb'
+require './lib/King.rb'
 require './lib/Piece.rb'
 
 class WhiteRook < White
@@ -21,7 +22,7 @@ class WhiteRook < White
 
     ghost_move = [@current_pos[0], @current_pos[1] + 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(King)
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
@@ -32,7 +33,7 @@ class WhiteRook < White
 
     ghost_move = [@current_pos[0], @current_pos[1] - 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(King)
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
@@ -43,7 +44,7 @@ class WhiteRook < White
 
     ghost_move = [@current_pos[0] + 1, @current_pos[1]]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(King)
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
@@ -54,7 +55,7 @@ class WhiteRook < White
 
     ghost_move = [@current_pos[0] - 1, @current_pos[1]]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(King)
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
@@ -83,7 +84,7 @@ class BlackRook < Black
 
     ghost_move = [@current_pos[0], @current_pos[1] + 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(King)
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
@@ -94,7 +95,7 @@ class BlackRook < Black
 
     ghost_move = [@current_pos[0], @current_pos[1] - 1]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(King)
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
@@ -105,7 +106,7 @@ class BlackRook < Black
 
     ghost_move = [@current_pos[0] + 1, @current_pos[1]]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(King)
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
@@ -116,7 +117,7 @@ class BlackRook < Black
 
     ghost_move = [@current_pos[0] - 1, @current_pos[1]]
     count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black)
+    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(Black) || board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(King)
       @legal_moves.push(ghost_move)
       count += 1
       break if board.piece_at(ghost_move[0], ghost_move[1]).kind_of?(White)
