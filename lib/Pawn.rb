@@ -34,7 +34,7 @@ class WhitePawn < White
       blocked_forward = board.piece_at(@current_pos[0],
                                        @current_pos[1] + 1).is_a?(Piece) || board.piece_at(@current_pos[0],
                                                                                            @current_pos[1] + 2).is_a?(Piece)
-      @legal_moves.push([@current_pos[0], @current_pos[1] + 2]) unless blocked_forward
+      @legal_moves.push([@current_pos[0], @current_pos[1] + 2]) unless blocked_forward || board.piece_at(@current_pos[0], @current_pos[1] + 2).is_a?(King)
     end
 
     # left-attack
@@ -47,7 +47,7 @@ class WhitePawn < White
 
     # right-attack
     if board.piece_at(@current_pos[0] + 1,
-                      @current_pos[1] + 1).is_a?(Black) && board.piece_at(@current_pos[0] + 1,
+                      @current_pos[1] + 1).is_a?(Black) && !board.piece_at(@current_pos[0] + 1,
                                                                           @current_pos[1] + 1).is_a?(King) && @current_pos[0] != 8
       # puts 'right-attack'
       @legal_moves.push([@current_pos[0] + 1, @current_pos[1] + 1])
@@ -85,12 +85,12 @@ class BlackPawn < Black
       blocked_forward = board.piece_at(@current_pos[0],
                                        @current_pos[1] - 1).is_a?(Piece) || board.piece_at(@current_pos[0],
                                                                                            @current_pos[1] - 2).is_a?(Piece)
-      @legal_moves.push([@current_pos[0], @current_pos[1] - 2]) unless blocked_forward
+      @legal_moves.push([@current_pos[0], @current_pos[1] - 2]) unless blocked_forward || board.piece_at(@current_pos[0], @current_pos[1] - 2).is_a?(King)
     end
 
     # left-attack
     if board.piece_at(@current_pos[0] - 1,
-                      @current_pos[1] - 1).is_a?(White) && board.piece_at(@current_pos[0] - 1,
+                      @current_pos[1] - 1).is_a?(White) && !board.piece_at(@current_pos[0] - 1,
                                                                           @current_pos[1] - 1).is_a?(King) && @current_pos[0] != 1
       # puts 'left-attack'
       @legal_moves.push([@current_pos[0] - 1, @current_pos[1] - 1])
@@ -98,7 +98,7 @@ class BlackPawn < Black
 
     # right-attack
     if board.piece_at(@current_pos[0] + 1,
-                      @current_pos[1] - 1).is_a?(White) && board.piece_at(@current_pos[0] + 1,
+                      @current_pos[1] - 1).is_a?(White) && !board.piece_at(@current_pos[0] + 1,
                                                                           @current_pos[1] - 1).is_a?(King) && @current_pos[0] != 8
       # puts 'right-attack'
       @legal_moves.push([@current_pos[0] + 1, @current_pos[1] - 1])
