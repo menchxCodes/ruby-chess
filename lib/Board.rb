@@ -18,6 +18,14 @@ class Board
     @temp = ""
   end
 
+  def white_piece?(piece)
+    piece.is_a?(White) && !piece.is_a?(King)
+  end
+
+  def black_piece?(piece)
+    piece.is_a?(Black) && !piece.is_a?(King)
+  end
+
   def random_loop
     until calculate_legals(@current_player).empty?
       break if @current_player.pieces.size == 1 && @current_player.pieces[0].is_a?(King)
