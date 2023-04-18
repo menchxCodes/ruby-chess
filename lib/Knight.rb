@@ -19,30 +19,13 @@ class WhiteKnight < White
   include Boundries
   def legal_moves(board)
     @legal_moves = []
+    knight_moves = [[-1, 2], [1, 2], [2, 1], [2, -1], [1, -2], [-1, -2], [-2, -1], [-2, 1]]
 
-    move = [@current_pos[0] + 1, @current_pos[1] + 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] + 1, @current_pos[1] - 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] - 1, @current_pos[1] + 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] - 1, @current_pos[1] - 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] + 2, @current_pos[1] + 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] + 2, @current_pos[1] - 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] - 2, @current_pos[1] + 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] - 2, @current_pos[1] - 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(White) || board.piece_at(move[0], move[1]).is_a?(King)
+    knight_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      @legal_moves.push(ghost_move) unless !within_bound?(ghost_move) || white_piece?(target)
+    end
 
     @legal_moves
   end
@@ -61,30 +44,13 @@ class BlackKnight < Black
   include Boundries
   def legal_moves(board)
     @legal_moves = []
+    knight_moves = [[-1, 2], [1, 2], [2, 1], [2, -1], [1, -2], [-1, -2], [-2, -1], [-2, 1]]
 
-    move = [@current_pos[0] + 1, @current_pos[1] + 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] + 1, @current_pos[1] - 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] - 1, @current_pos[1] + 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] - 1, @current_pos[1] - 2]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] + 2, @current_pos[1] + 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] + 2, @current_pos[1] - 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] - 2, @current_pos[1] + 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
-
-    move = [@current_pos[0] - 2, @current_pos[1] - 1]
-    @legal_moves.push(move) unless !within_bound?(move) || board.piece_at(move[0], move[1]).is_a?(Black) || board.piece_at(move[0], move[1]).is_a?(King)
+    knight_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      @legal_moves.push(ghost_move) unless !within_bound?(ghost_move) || black_piece?(target)
+    end
 
     @legal_moves
   end
