@@ -5,16 +5,16 @@ require './lib/Bishop'
 require './lib/Queen.rb'
 require './lib/King.rb'
 require './lib/Knight.rb'
-
-class Piece
-  def piece?
-    is_a?(Piece)
-  end
-
+module Boundries
   def within_bound?(move)
     return true if move[0].between?(1, 8) && move[1].between?(1, 8)
 
     false
+  end 
+end
+class Piece
+  def piece?
+    is_a?(Piece)
   end
 end
 

@@ -16,7 +16,7 @@ class WhiteRook < White
     @current_pos = @start_pos
     @moves = []
   end
-
+  include Boundries
   def legal_moves(board)
     @legal_moves = []
 
@@ -78,7 +78,7 @@ class BlackRook < Black
     @current_pos = @start_pos
     @moves = []
   end
-
+  include Boundries
   def legal_moves(board)
     @legal_moves = []
 
