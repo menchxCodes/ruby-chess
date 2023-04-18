@@ -19,11 +19,11 @@ class Board
   end
 
   def white_piece?(piece)
-    piece.is_a?(White) && !piece.is_a?(King)
+    piece.is_a?(White) || piece.is_a?(King)
   end
 
   def black_piece?(piece)
-    piece.is_a?(Black) && !piece.is_a?(King)
+    piece.is_a?(Black) || piece.is_a?(King)
   end
 
   def random_loop
