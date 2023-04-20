@@ -65,14 +65,18 @@ class Board
     output
   end
 
-  def do_move(piece, x_move, y_move, player = @current_player)
+  def do_move(piece, x_move, y_move)
     move = [x_move, y_move]
     target_piece = piece_at(x_move, y_move)
     previous_pos = piece.current_pos
 
-    if target_piece.is_a?(Piece)
-      opposite_player.lost << target_piece
-      opposite_player.pieces.delete(target_piece)
+    if target_piece.is_a?(White)
+      @player_one.lost << target_piece
+      @player_one.pieces.delete(target_piece)
+
+    elsif target_piece.is_a?(Black)
+      @player_two.lost << target_piece
+      @player_two.pieces.delete(target_piece)
     end
 
     piece.moves << move
