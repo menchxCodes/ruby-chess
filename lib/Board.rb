@@ -15,7 +15,7 @@ class Board
     @player_two = Black.new
     @current_player = @player_one
     @turn = 0
-    @temp = ""
+    @temp = "checks:"
   end
 
   
@@ -35,6 +35,7 @@ class Board
       puts "#{@current_player} turn"
     end
     puts "draw!"
+    puts @temp
   end
 
   def change_player(player = @current_player)
@@ -65,6 +66,21 @@ class Board
     output
   end
 
+  def calculate_checks(player)
+    output = []
+    player.pieces.each do |piece|
+      unless piece.is_a?(King) || piece.is_a?(WhiteKnight) || piece.is_a?(BlackKnight) || piece.is_a?(WhitePawn) || piece.is_a?(BlackPawn)
+        checks = Array.new(2) {Array.new}
+        moves = piece.check_moves(self)
+
+        checks[0] = piece.current_pos unless moves.empty?
+        checks[1].replace(moves) unless moves.empty?
+        output << checks unless moves.empty?
+      end
+    end
+    output
+  end
+
   def do_move(piece, x_move, y_move)
     move = [x_move, y_move]
     target_piece = piece_at(x_move, y_move)
@@ -88,6 +104,19 @@ class Board
 
   def do_random_legal_move(player)
     legals = calculate_legals(player)
+    opposite_legals = calculate_checks(opposite_player)
+
+    oppo_king_pos = find_current_king.current_pos
+    puts "opposite king pos #{oppo_king_pos}"
+
+    legals.each do |piecemove|
+      @temp.concat(" CHECK #{@turn} | ") if piecemove[1].include?(oppo_king_pos)
+    end
+
+    opposite_legals.each do |piecemove|
+      @temp.concat(" CHECK #{@turn} | ") if piecemove[1].include?(oppo_king_pos)
+    end
+
     sample = legals.sample
     random_piece = sample[0]
     return if random_piece.nil?
@@ -162,6 +191,14 @@ class Board
     end
   end
 
+  def find_current_king(player = @current_player)
+    if player.is_a?(White)
+      find_white_king
+    elsif player.is_a?(Black)
+      find_black_king
+    end
+  end
+
   def find_white_king
     player_one.pieces.each do |piece|
       return piece if piece.avatar == "\u2654"
@@ -181,6 +218,8 @@ class Board
     setup_black_pieces
     setup_black_pawns
   end
+
+  private
 
   def setup_white_pawns
     @board[2].each_index do |index|
