@@ -20,111 +20,69 @@ class WhiteQueen < White
   def legal_moves(board)
     @legal_moves = []
 
-    ghost_move = [@current_pos[0] + 1, @current_pos[1] + 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
+    rook_moves = [[1, 0], [0, -1], [-1, 0], [0, 1]]
 
-      ghost_move = [ghost_move[0] + 1, ghost_move[1] + 1]
+    rook_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      until !within_bound?(ghost_move) || white_piece?(target)
+        @legal_moves << ghost_move
+        break if target.is_a?(Black)
+
+        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
+        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      end
     end
-    # puts "#{count} moves Up-right"
 
-    ghost_move = [@current_pos[0] + 1, @current_pos[1] - 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
+    bishop_moves = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
 
-      ghost_move = [ghost_move[0] + 1, ghost_move[1] - 1]
+    bishop_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      until !within_bound?(ghost_move) || white_piece?(target)
+        @legal_moves << ghost_move
+        break if target.is_a?(Black)
+
+        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
+        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      end
     end
-    # puts "#{count} moves down-right"
-
-    ghost_move = [@current_pos[0] - 1, @current_pos[1] + 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
-
-      ghost_move = [ghost_move[0] - 1, ghost_move[1] + 1]
-    end
-    # puts "#{count} moves up-left"
-
-    ghost_move = [@current_pos[0] - 1, @current_pos[1] - 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
-
-      ghost_move = [ghost_move[0] - 1, ghost_move[1] - 1]
-    end
-    # puts "#{count} moves down-left"
-
-    ghost_move = [@current_pos[0], @current_pos[1] + 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
-
-      ghost_move = [ghost_move[0], ghost_move[1] + 1]
-    end
-    # puts "#{count} moves Up"
-
-    ghost_move = [@current_pos[0], @current_pos[1] - 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
-
-      ghost_move = [ghost_move[0], ghost_move[1] - 1]
-    end
-    # puts "#{count} moves down"
-
-    ghost_move = [@current_pos[0] + 1, @current_pos[1]]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
-
-      ghost_move = [ghost_move[0] + 1, ghost_move[1]]
-    end
-    # puts "#{count} moves right"
-
-    ghost_move = [@current_pos[0] - 1, @current_pos[1]]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(White) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(Black)
-
-      ghost_move = [ghost_move[0] - 1, ghost_move[1]]
-    end
-    # puts "#{count} moves left"
 
     @legal_moves
+  end
+
+  def check_moves(board)
+    check_moves = []
+    rook_moves = [[1, 0], [0, -1], [-1, 0], [0, 1]]
+
+    black_king_pos = board.find_black_king.current_pos
+
+    rook_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      until !within_bound?(ghost_move) || white_piece_only?(target)
+        check_moves.push(ghost_move) if ghost_move == black_king_pos
+        break if target.is_a?(Black)
+
+        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
+        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      end
+    end
+
+    bishop_moves = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
+
+    bishop_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      until !within_bound?(ghost_move) || white_piece_only?(target)
+        check_moves.push(ghost_move) if ghost_move == black_king_pos
+        break if target.is_a?(Black)
+
+        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
+        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      end
+    end
+    check_moves
   end
 end
 
@@ -142,110 +100,68 @@ class BlackQueen < Black
   def legal_moves(board)
     @legal_moves = []
 
-    ghost_move = [@current_pos[0] + 1, @current_pos[1] + 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
+    rook_moves = [[1, 0], [0, -1], [-1, 0], [0, 1]]
 
-      ghost_move = [ghost_move[0] + 1, ghost_move[1] + 1]
+    rook_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      until !within_bound?(ghost_move) || black_piece?(target)
+        @legal_moves << ghost_move
+        break if target.is_a?(White)
+
+        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
+        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      end
     end
-    # puts "#{count} moves Up-right"
 
-    ghost_move = [@current_pos[0] + 1, @current_pos[1] - 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
+    bishop_moves = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
 
-      ghost_move = [ghost_move[0] + 1, ghost_move[1] - 1]
+    bishop_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      until !within_bound?(ghost_move) || black_piece?(target)
+        @legal_moves << ghost_move
+        break if target.is_a?(White)
+
+        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
+        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      end
     end
-    # puts "#{count} moves down-right"
-
-    ghost_move = [@current_pos[0] - 1, @current_pos[1] + 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
-
-      ghost_move = [ghost_move[0] - 1, ghost_move[1] + 1]
-    end
-    # puts "#{count} moves up-left"
-
-    ghost_move = [@current_pos[0] - 1, @current_pos[1] - 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
-
-      ghost_move = [ghost_move[0] - 1, ghost_move[1] - 1]
-    end
-    # puts "#{count} moves down-left"
-
-    ghost_move = [@current_pos[0], @current_pos[1] + 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
-
-      ghost_move = [ghost_move[0], ghost_move[1] + 1]
-    end
-    # puts "#{count} moves Up"
-
-    ghost_move = [@current_pos[0], @current_pos[1] - 1]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
-
-      ghost_move = [ghost_move[0], ghost_move[1] - 1]
-    end
-    # puts "#{count} moves down"
-
-    ghost_move = [@current_pos[0] + 1, @current_pos[1]]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
-
-      ghost_move = [ghost_move[0] + 1, ghost_move[1]]
-    end
-    # puts "#{count} moves right"
-
-    ghost_move = [@current_pos[0] - 1, @current_pos[1]]
-    count = 0
-    until !within_bound?(ghost_move) || board.piece_at(ghost_move[0],
-                                                       ghost_move[1]).is_a?(Black) || board.piece_at(ghost_move[0],
-                                                                                                     ghost_move[1]).is_a?(King)
-      @legal_moves.push(ghost_move)
-      count += 1
-      break if board.piece_at(ghost_move[0], ghost_move[1]).is_a?(White)
-
-      ghost_move = [ghost_move[0] - 1, ghost_move[1]]
-    end
-    # puts "#{count} moves left"
-
+    
     @legal_moves
+  end
+
+  def check_moves(board)
+    check_moves = []
+    rook_moves = [[1, 0], [0, -1], [-1, 0], [0, 1]]
+
+    white_king_pos = board.find_white_king.current_pos
+
+    rook_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      until !within_bound?(ghost_move) || black_piece_only?(target)
+        check_moves.push(ghost_move) if ghost_move == white_king_pos
+        break if target.is_a?(White)
+
+        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
+        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      end
+    end
+
+    bishop_moves = [[1, 1], [1, -1], [-1, -1], [-1, 1]]
+
+    bishop_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      until !within_bound?(ghost_move) || black_piece_only?(target)
+        check_moves.push(ghost_move) if ghost_move == white_king_pos
+        break if target.is_a?(White)
+
+        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
+        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      end
+    end
+    check_moves
   end
 end
