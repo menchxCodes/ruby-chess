@@ -18,13 +18,7 @@ class Board
     @temp = ""
   end
 
-  def white_piece?(piece)
-    piece.is_a?(White) || piece.is_a?(King)
-  end
-
-  def black_piece?(piece)
-    piece.is_a?(Black) || piece.is_a?(King)
-  end
+  
 
   def random_loop
     until calculate_legals(@current_player).empty?
@@ -135,6 +129,26 @@ class Board
 
   def piece_at(x_pos, y_pos)
     @board[y_pos][x_pos]
+  end
+
+  def find_opposite_king(player = opposite_player)
+    if player.is_a?(White)
+      find_white_king
+    elsif player.is_a?(Black)
+      find_black_king
+    end
+  end
+
+  def find_white_king
+    player_one.pieces.each do |piece|
+      return piece if piece.avatar == "\u2654"
+    end
+  end
+
+  def find_black_king
+    player_two.pieces.each do |piece|
+      return piece if piece.avatar == "\u265a"
+    end
   end
 
   def setup_pieces
