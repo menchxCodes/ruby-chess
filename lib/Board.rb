@@ -19,13 +19,14 @@ class Board
   end
 
   
+  def draw?
+    return true if @current_player.pieces.size == 1
+    return true if opposite_player.pieces.size == 1
+    false
+  end
 
   def random_loop
-    until calculate_legals(@current_player).empty?
-      break if @current_player.pieces.size == 1 && @current_player.pieces[0].is_a?(King)
-
-      break if opposite_player.pieces.size == 1 && opposite_player.pieces[0].is_a?(King)
-
+    until draw?
       @turn += 1
       do_random_legal_move(@current_player)
       print_board
@@ -33,6 +34,7 @@ class Board
       change_player
       puts "#{@current_player} turn"
     end
+    puts "draw!"
   end
 
   def change_player(player = @current_player)
@@ -61,6 +63,23 @@ class Board
       output << legals unless moves.empty?
     end
     output
+  end
+
+  def do_move(piece, x_move, y_move, player = @current_player)
+    move = [x_move, y_move]
+    target_piece = piece_at(x_move, y_move)
+    previous_pos = piece.current_pos
+
+    if target_piece.is_a?(Piece)
+      opposite_player.lost << target_piece
+      opposite_player.pieces.delete(target_piece)
+    end
+
+    piece.moves << move
+    piece.current_pos = move
+    @board[previous_pos[1]][previous_pos[0]] = ' '
+    @board[move[1]][move[0]] = piece
+    print_board
   end
 
   def do_random_legal_move(player)
