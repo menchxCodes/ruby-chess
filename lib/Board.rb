@@ -18,11 +18,81 @@ class Board
     @temp = "checks:"
   end
 
-  
   def draw?
     return true if @current_player.pieces.size == 1
+
     return true if opposite_player.pieces.size == 1
+
     false
+  end
+
+  def play
+    until draw?
+      puts ""
+
+      piece_move = player_input
+      piece = piece_move[0]
+      move = piece_move[1]
+
+      do_move(piece, move[0], move[1])
+      change_player
+    end
+  end
+
+  def player_input
+    sample = calculate_legals(@current_player).sample
+    sample_piece = sample[0]
+    sample_move = sample[1].sample
+    return [piece_at(sample_piece[0], sample_piece[1]), sample_move] if @current_player.name == "black"
+
+    puts "#{@current_player.name} player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
+    input = gets.chomp!
+
+    until valid_input?(input)
+      puts "#{@current_player.name} player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
+      input = gets.chomp!
+    end
+
+    output = input.split(' ')
+    # puts "got #{output} as input"
+    piece_input = output[0].split('')
+    move_input = output[1].split('')
+
+    piece = piece_at(piece_input[0].to_i, piece_input[1].to_i)
+    move = [move_input[0].to_i, move_input[1].to_i]
+
+    [piece, move]
+  end
+
+  def valid_input?(input)
+    input = input.split(' ')
+    return false unless input.size == 2
+
+    piece_input = input[0].split('')
+    unless piece_input[0].to_i.between?(1, 8) && piece_input[1].to_i.between?(1, 8)
+      puts 'invalid move: selected piece is out of bounds'
+      return false
+    end
+
+    move_input = input[1].split('')
+    unless move_input[0].to_i.between?(1, 8) && move_input[1].to_i.between?(1, 8)
+      puts 'invalid move: selected move is out of bounds'
+      return false
+    end
+
+    piece = piece_at(piece_input[0].to_i, piece_input[1].to_i)
+    unless @current_player.pieces.include?(piece)
+      puts "invalid piece at #{piece_input}"
+      return false
+    end
+
+    move = [move_input[0].to_i, move_input[1].to_i]
+    unless piece.legal_moves(self).include?(move)
+      puts "illegal move #{move}"
+      return false
+    end
+
+    true
   end
 
   def random_loop
@@ -81,6 +151,59 @@ class Board
     output
   end
 
+  def allowed_move?
+    checks = calculate_checks(opposite_player)
+    return true if checks.size == 0
+
+    false
+  end
+
+  def try_legal_move(piece, x_move, y_move)
+    move = [x_move, y_move]
+    result = nil
+    return "illegal move" unless piece.legal_moves(self).include?(move)
+
+    target_piece = piece_at(x_move, y_move)
+    previous_pos = piece.current_pos
+
+    if target_piece.is_a?(White)
+      @player_one.lost << target_piece
+      @player_one.pieces.delete(target_piece)
+
+    elsif target_piece.is_a?(Black)
+      @player_two.lost << target_piece
+      @player_two.pieces.delete(target_piece)
+    end
+
+    piece.moves << move
+    piece.current_pos = move
+    @board[previous_pos[1]][previous_pos[0]] = ' '
+    @board[move[1]][move[0]] = piece
+
+    if allowed_move?
+      result = "success"
+      print_board
+    else
+      puts "move will result in a check for #{@current_player}, please try again:"
+      result = "failure"
+    end
+
+    piece.moves.pop
+    piece.current_pos = previous_pos
+    @board[move[1]][move[0]] = target_piece
+    @board[previous_pos[1]][previous_pos[0]] = piece
+
+    if target_piece.is_a?(White)
+      @player_one.pieces << target_piece
+      @player_one.lost.delete(target_piece)
+    elsif target_piece.is_a?(Black)
+      @player_two.pieces << target_piece
+      @player_two.lost.delete(target_piece)
+    end
+
+    result
+  end
+
   def do_move(piece, x_move, y_move)
     move = [x_move, y_move]
     target_piece = piece_at(x_move, y_move)
@@ -99,7 +222,9 @@ class Board
     piece.current_pos = move
     @board[previous_pos[1]][previous_pos[0]] = ' '
     @board[move[1]][move[0]] = piece
+
     print_board
+    puts "#{@current_player.name} moved #{piece.avatar} at #{previous_pos} to #{move}."
   end
 
   def do_random_legal_move(player)
@@ -171,12 +296,12 @@ class Board
     end
     white_lost = "white-lost:"
     @player_one.lost.each {|piece| white_lost.concat(piece.avatar) }
-    puts white_lost
+    puts white_lost unless @player_one.lost.empty?
 
     black_lost = "black-lost:"
     @player_two.lost.each {|piece| black_lost.concat(piece.avatar) }
-    puts black_lost
-    puts @temp
+    puts black_lost unless @player_two.lost.empty?
+    puts @temp unless @temp == 'checks:'
   end
 
   def piece_at(x_pos, y_pos)
