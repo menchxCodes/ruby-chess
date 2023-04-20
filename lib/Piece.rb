@@ -42,8 +42,10 @@ end
 # White class is to be used for all non-king white pieces.
 class White < Piece
   attr_accessor :pieces, :lost
+  attr_reader :name
 
   def initialize
+    @name = "white"
     @pieces = []
     @lost = []
   end
@@ -52,8 +54,10 @@ end
 # Black class is to be used for all non-king black pieces.
 class Black < Piece
   attr_accessor :pieces, :lost
+  attr_reader :name
 
   def initialize
+    @name = "black"
     @pieces = []
     @lost = []
   end
