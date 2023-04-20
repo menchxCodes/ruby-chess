@@ -24,6 +24,14 @@ class Piece
     piece.is_a?(White) || piece.is_a?(King)
   end
 
+  def white_piece_only?(piece)
+    piece.is_a?(White) || piece.is_a?(WhiteKing)
+  end
+
+  def black_piece_only?(piece)
+    piece.is_a?(Black) || piece.is_a?(BlackKing)
+  end
+
   # returns TRUE if piece is a black piece or a king of either color.
   # Useful for determining if a piece is non-takable.
   def black_piece?(piece)
