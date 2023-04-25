@@ -57,7 +57,7 @@ class Black < Piece
   attr_reader :name
 
   def initialize
-    @name = "black"
+    @name = "computer"
     @pieces = []
     @lost = []
   end
