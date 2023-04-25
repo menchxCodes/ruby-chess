@@ -26,30 +26,59 @@ class Board
     false
   end
 
+  def win?
+    return true if checked? && uncheck_moves.size.zero?
+
+    false
+  end
+
   def checked?(player = @current_player)
     opposite = opposite_player(player)
     opposite_checks = calculate_checks(opposite)
     return false if opposite_checks.size.zero?
 
+    opposite_checks.each do |check|
+      puts "check by #{piece_at(check[0][0], check[0][1]).avatar} at #{check[0]} on #{check[1]}"
+    end
+
     true
   end
 
-  def play
-    until draw?
-      puts ""
+  def uncheck_moves(player = @current_player)
+    unchecks = []
+    legals = calculate_legals(player)
+    legals.each do |piece_move|
+      piece = piece_at(piece_move[0][0], piece_move[0][1])
+      moves = piece_move[1]
+      moves.each do |move|
+        try = try_legal_move(piece, move[0], move[1])
+        unchecks << [piece_move[0], move] if try == "success"
+      end
+    end
 
+    unchecks
+  end
+
+  def play
+    until draw? || win?
+      puts "\n"
+      puts "#{@current_player.name}'s king is under check" if checked?(@current_player)
       piece_move = player_input
       piece = piece_move[0]
       move = piece_move[1]
 
       do_move(piece, move[0], move[1])
-      puts "#{@current_player.name} check!" if checked?(@current_player)
+      puts "#{@current_player.name} checks #{opposite_player.name}'s king" if checked?(@opposite_player)
       change_player
     end
+    puts "draw" if draw?
+    puts "#{opposite_player.name} wins!" if win?
   end
 
   def player_input
     sample = calculate_legals(@current_player).sample
+    sample = uncheck_moves.sample if checked?
+
     sample_piece = sample[0]
     sample_move = sample[1].sample
     return [piece_at(sample_piece[0], sample_piece[1]), sample_move] if @current_player.name == "black"
@@ -101,20 +130,27 @@ class Board
       return false
     end
 
+    if checked?
+      unless uncheck_moves.include?(move)
+        puts 'move will not remove your check status'
+        return false
+      end
+    end
+
     true
   end
 
   def random_loop
-    until draw?
+    until draw? || win?
       @turn += 1
       do_random_legal_move(@current_player)
       print_board
       puts @turn
       change_player
-      puts "#{@current_player} turn"
+      puts "#{@current_player.name} turn"
     end
-    puts "draw!"
-    puts @temp
+    puts "draw!" if draw?
+    puts "check-mate by #{opposite_player.name}" if win?
   end
 
   def change_player(player = @current_player)
@@ -191,9 +227,9 @@ class Board
 
     if allowed_move?
       result = "success"
-      print_board
+      # print_board
     else
-      puts "move will result in a check for #{@current_player}, please try again:"
+      # puts "move will result in a check for #{@current_player}, please try again:"
       result = "failure"
     end
 
@@ -238,24 +274,20 @@ class Board
 
   def do_random_legal_move(player)
     legals = calculate_legals(player)
-    opposite_legals = calculate_checks(opposite_player)
-
-    oppo_king_pos = find_current_king.current_pos
-    puts "opposite king pos #{oppo_king_pos}"
-
-    legals.each do |piecemove|
-      @temp.concat(" CHECK #{@turn} | ") if piecemove[1].include?(oppo_king_pos)
+    if checked?(player)
+      legals = uncheck_moves(player)
+      if legals.size.zero?
+        puts "wtf"
+      end
     end
-
-    opposite_legals.each do |piecemove|
-      @temp.concat(" CHECK #{@turn} | ") if piecemove[1].include?(oppo_king_pos)
-    end
+    puts "uncheck moves: #{uncheck_moves(player)}" if checked?(player)
 
     sample = legals.sample
     random_piece = sample[0]
     return if random_piece.nil?
 
     random_move = sample[1].sample
+    random_move = sample[1] if checked?(player)
     puts "movable pieces=#{legals.size} legal moves= #{sample[1].size}"
     puts "piece:#{random_piece} move:#{random_move}"
 
@@ -310,7 +342,6 @@ class Board
     black_lost = "black-lost:"
     @player_two.lost.each {|piece| black_lost.concat(piece.avatar) }
     puts black_lost unless @player_two.lost.empty?
-    puts @temp unless @temp == 'checks:'
   end
 
   def piece_at(x_pos, y_pos)
