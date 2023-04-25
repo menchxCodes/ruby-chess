@@ -65,12 +65,8 @@ class WhitePawn < White
     white_pawn_moves.each do |move|
       ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
       target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
-      until !within_bound?(ghost_move) || white_piece_only?(target)
+      unless !within_bound?(ghost_move) || white_piece_only?(target)
         check_moves.push(ghost_move) if ghost_move == black_king_pos
-        break if target.is_a?(Black)
-
-        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
-        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
       end
     end
 
@@ -137,12 +133,8 @@ class BlackPawn < Black
     black_pawn_moves.each do |move|
       ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
       target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
-      until !within_bound?(ghost_move) || black_piece_only?(target)
+      unless !within_bound?(ghost_move) || black_piece_only?(target)
         check_moves.push(ghost_move) if ghost_move == white_king_pos
-        break if target.is_a?(White)
-
-        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
-        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
       end
     end
 
