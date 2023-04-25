@@ -37,7 +37,7 @@ class WhiteRook < White
   end
 
   def check_moves(board)
-    check_moves = []
+    checks = []
     rook_moves = [[1, 0], [0, -1], [-1, 0], [0, 1]]
 
     black_king_pos = board.find_black_king.current_pos
@@ -46,14 +46,14 @@ class WhiteRook < White
       ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
       target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
       until !within_bound?(ghost_move) || white_piece_only?(target)
-        check_moves.push(ghost_move) if ghost_move == black_king_pos
+        checks.push(ghost_move) if ghost_move == black_king_pos
         break if target.is_a?(Black)
 
         ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
         target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
       end
     end
-    check_moves
+    checks
   end
 end
 
@@ -88,7 +88,7 @@ class BlackRook < Black
   end
 
   def check_moves(board)
-    check_moves = []
+    checks = []
     rook_moves = [[1, 0], [0, -1], [-1, 0], [0, 1]]
 
     white_king_pos = board.find_white_king.current_pos
@@ -97,13 +97,13 @@ class BlackRook < Black
       ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
       target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
       until !within_bound?(ghost_move) || black_piece_only?(target)
-        check_moves.push(ghost_move) if ghost_move == white_king_pos
+        checks.push(ghost_move) if ghost_move == white_king_pos
         break if target.is_a?(White)
 
         ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
         target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
       end
     end
-    check_moves
+    checks
   end
 end
