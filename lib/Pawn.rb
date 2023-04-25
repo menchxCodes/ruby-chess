@@ -16,7 +16,7 @@ class WhitePawn < White
     @current_pos = @start_pos
     @moves = []
   end
-
+  include Boundries
   def legal_moves(board)
     @legal_moves = []
     # single-forward_move
@@ -55,6 +55,27 @@ class WhitePawn < White
 
     @legal_moves
   end
+
+  def check_moves(board)
+    check_moves = []
+    white_pawn_moves = [[-1, 1], [1, 1]]
+
+    black_king_pos = board.find_black_king.current_pos
+
+    white_pawn_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      until !within_bound?(ghost_move) || white_piece_only?(target)
+        check_moves.push(ghost_move) if ghost_move == black_king_pos
+        break if target.is_a?(Black)
+
+        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
+        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      end
+    end
+
+    check_moves
+  end
 end
 
 class BlackPawn < Black
@@ -67,7 +88,7 @@ class BlackPawn < Black
     @current_pos = @start_pos
     @moves = []
   end
-
+  include Boundries
   def legal_moves(board)
     @legal_moves = []
     return @legal_moves if @current_pos[1] == 1
@@ -105,5 +126,26 @@ class BlackPawn < Black
     end
 
     @legal_moves
+  end
+
+  def check_moves(board)
+    check_moves = []
+    black_pawn_moves = [[-1, -1], [1, -1]]
+
+    white_king_pos = board.find_white_king.current_pos
+
+    black_pawn_moves.each do |move|
+      ghost_move = [@current_pos[0] + move[0], @current_pos[1] + move[1]]
+      target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      until !within_bound?(ghost_move) || black_piece_only?(target)
+        check_moves.push(ghost_move) if ghost_move == white_king_pos
+        break if target.is_a?(White)
+
+        ghost_move = [ghost_move[0] + move[0], ghost_move[1] + move[1]]
+        target = board.piece_at(ghost_move[0], ghost_move[1]) if within_bound?(ghost_move)
+      end
+    end
+
+    check_moves
   end
 end
