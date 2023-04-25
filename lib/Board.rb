@@ -26,6 +26,14 @@ class Board
     false
   end
 
+  def checked?(player = @current_player)
+    opposite = opposite_player(player)
+    opposite_checks = calculate_checks(opposite)
+    return false if opposite_checks.size.zero?
+
+    true
+  end
+
   def play
     until draw?
       puts ""
@@ -35,6 +43,7 @@ class Board
       move = piece_move[1]
 
       do_move(piece, move[0], move[1])
+      puts "#{@current_player.name} check!" if checked?(@current_player)
       change_player
     end
   end
@@ -139,7 +148,7 @@ class Board
   def calculate_checks(player)
     output = []
     player.pieces.each do |piece|
-      unless piece.is_a?(King) || piece.is_a?(WhiteKnight) || piece.is_a?(BlackKnight) || piece.is_a?(WhitePawn) || piece.is_a?(BlackPawn)
+      unless piece.is_a?(King)
         checks = Array.new(2) {Array.new}
         moves = piece.check_moves(self)
 
@@ -152,8 +161,8 @@ class Board
   end
 
   def allowed_move?
-    checks = calculate_checks(opposite_player)
-    return true if checks.size == 0
+    opposite_checks = calculate_checks(opposite_player)
+    return true if opposite_checks.size == 0
 
     false
   end
