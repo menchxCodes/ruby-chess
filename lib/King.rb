@@ -43,7 +43,34 @@ class WhiteKing < King
       @legal_moves.delete(move) if black_king_moves.include?(move)
     end
 
+    right_castle = true
+    left_castle = true
+
+    if castle?(board)
+      opposite_moves = board.calculate_legals(board.player_two)
+      opposite_moves.each do |piece_move|
+        moves = piece_move[1]
+        if moves.include?([6, 1]) || moves.include?([7, 1])
+          right_castle = false
+        end
+
+        if moves.include?([4, 1]) || moves.include?([3, 1]) || moves.include?([2, 1])
+          left_castle = false
+        end
+      end
+
+      # @legal_moves << [7, 1] if right_castle
+      # @legal_moves << [3, 1] if left_castle
+      @legal_moves << [7, 1, "white_right_castle"]
+      @legal_moves << [3, 1, "white_right_castle"]
+    end
     @legal_moves
+  end
+
+  def castle?(board)
+    return false if board.checked?(@player_one)
+    return true if @moves.empty? && board.piece_at(6, 1) == ' ' && board.piece_at(7, 1) == ' ' && board.piece_at(8, 1).is_a?(WhiteRook) && board.piece_at(8, 1).moves.empty?
+    return true if @moves.empty? && board.piece_at(4, 1) == ' ' && board.piece_at(3, 1) == ' ' && board.piece_at(2, 1) == ' ' && board.piece_at(1, 1).is_a?(WhiteRook) && board.piece_at(1, 1).moves.empty?
   end
 
   def influence
@@ -86,7 +113,34 @@ class BlackKing < King
       @legal_moves.delete(move) if white_king_moves.include?(move)
     end
 
+    right_castle = true
+    left_castle = true
+
+    if castle?(board)
+      opposite_moves = board.calculate_legals(board.player_two)
+      opposite_moves.each do |piece_move|
+        moves = piece_move[1]
+        if moves.include?([6, 8]) || moves.include?([7, 8])
+          right_castle = false
+        end
+
+        if moves.include?([4, 8]) || moves.include?([3, 8]) || moves.include?([2, 8])
+          left_castle = false
+        end
+      end
+
+      # @legal_moves << [7, 8] if right_castle
+      # @legal_moves << [3, 8] if left_castle
+      @legal_moves << [7, 8, "black_right_castle"] if right_castle
+      @legal_moves << [3, 8, "black_left_castle"] if left_castle
+    end
     @legal_moves
+  end
+
+  def castle?(board)
+    return false if board.checked?(@player_one)
+    return true if @moves.empty? && board.piece_at(6, 8) == ' ' && board.piece_at(7, 8) == ' ' && board.piece_at(8, 8).is_a?(BlackRook) && board.piece_at(8, 8).moves.empty?
+    return true if @moves.empty? && board.piece_at(4, 8) == ' ' && board.piece_at(3, 8) == ' ' && board.piece_at(2, 8) == ' ' && board.piece_at(1, 8).is_a?(BlackRook) && board.piece_at(1, 8).moves.empty?
   end
 
   def influence
