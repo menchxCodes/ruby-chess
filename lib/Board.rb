@@ -19,9 +19,52 @@ class Board
   end
 
   def draw?
-    return true if @current_player.pieces.size == 1
+    # dead position king vs king
+    return true if @current_player.pieces.size == 1 && opposite_player.pieces.size == 1
 
-    return true if opposite_player.pieces.size == 1
+    # dead position king vs king & bishop or king & knight
+    if @current_player.pieces.size == 1 && opposite_player.pieces.size == 2
+      opposite_player.pieces.each do |piece|
+        return true if piece.is_a?(WhiteKnight) || piece.is_a?(BlackKnight)
+      end
+    end
+
+    if @current_player.pieces.size == 2 && opposite_player.pieces.size == 1
+      @current_player.pieces.each do |piece|
+        return true if piece.is_a?(WhiteKnight) || piece.is_a?(BlackKnight)
+      end
+    end
+
+    if @current_player.pieces.size == 1 && opposite_player.pieces.size == 2
+      opposite_player.pieces.each do |piece|
+        return true if piece.is_a?(WhiteBishop) || piece.is_a?(BlackBishop)
+      end
+    end
+
+    if @current_player.pieces.size == 2 && opposite_player.pieces.size == 1
+      @current_player.pieces.each do |piece|
+        return true if piece.is_a?(WhiteBishop) || piece.is_a?(BlackBishop)
+      end
+    end
+
+    # dead position king & bishop vs king & bishop of the same square color
+    if @current_player.pieces.size == 2 && opposite_player.pieces.size == 2
+      first_bishop = @current_player.pieces.select { |piece| piece.is_a?(WhiteBishop) || piece.is_a?(BlackBishop) }
+      second_bishop = @current_player.pieces.select { |piece| piece.is_a?(WhiteBishop) || piece.is_a?(BlackBishop) }
+      unless first_bishop.empty? || second_bishop.empty?
+        return true if first_bishop[0].start_pos == [6, 1] && second_bishop[0].start_pos == [3, 8]
+        return true if second_bishop[0].start_pos == [6, 1] && first_bishop[0].start_pos == [3, 8]
+      end
+      unless first_bishop.empty? || second_bishop.empty?
+        return true if first_bishop[0].start_pos == [3, 1] && second_bishop[0].start_pos == [1, 8]
+        return true if second_bishop[0].start_pos == [3, 1] && first_bishop[0].start_pos == [1, 8]
+      end
+    end
+
+    # stalemate
+    if !checked?(@current_player) && calculate_legals(@current_player).empty?
+      return true
+    end
 
     false
   end
@@ -81,6 +124,7 @@ class Board
 
     sample_piece = sample[0]
     sample_move = sample[1].sample
+    sample_move = sample[1] if checked?
     return [piece_at(sample_piece[0], sample_piece[1]), sample_move] if @current_player.name == "black"
 
     puts "#{@current_player.name} player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
@@ -295,14 +339,11 @@ class Board
     piece.moves.push(random_move)
     target_piece = piece_at(random_move[0], random_move[1])
 
-    if target_piece.is_a?(King)
-      @temp.concat("KING DELETED #{@turn} |")
-    end
-
     if target_piece.is_a?(Piece)
       opposite_player.lost << target_piece
       opposite_player.pieces.delete(target_piece)
     end
+    
     @board[random_move[1]][random_move[0]] = piece
     piece.current_pos = [random_move[0], random_move[1]]
     @board[random_piece[1]][random_piece[0]] = ' '
