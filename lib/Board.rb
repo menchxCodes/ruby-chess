@@ -101,7 +101,6 @@ class Board
       end
       unchecks << [piece.current_pos, uncheck_moves] unless uncheck_moves.empty?
     end
-    puts "unchecks: #{unchecks}"
     unchecks
   end
 
