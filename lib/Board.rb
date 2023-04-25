@@ -63,6 +63,7 @@ class Board
 
     # stalemate
     if !checked?(@current_player) && calculate_legals(@current_player).empty?
+      puts 'stalemate'
       return true
     end
 
@@ -80,9 +81,9 @@ class Board
     opposite_checks = calculate_checks(opposite)
     return false if opposite_checks.size.zero?
 
-    opposite_checks.each do |check|
-      puts "check by #{piece_at(check[0][0], check[0][1]).avatar} at #{check[0]} on #{check[1]}"
-    end
+    # opposite_checks.each do |check|
+    #   puts "check by #{piece_at(check[0][0], check[0][1]).avatar} at #{check[0]} on #{check[1]}"
+    # end
 
     true
   end
@@ -91,14 +92,16 @@ class Board
     unchecks = []
     legals = calculate_legals(player)
     legals.each do |piece_move|
+      uncheck_moves = []
       piece = piece_at(piece_move[0][0], piece_move[0][1])
       moves = piece_move[1]
       moves.each do |move|
         try = try_legal_move(piece, move[0], move[1])
-        unchecks << [piece_move[0], move] if try == "success"
+        uncheck_moves << move if try == "success"
       end
+      unchecks << [piece.current_pos, uncheck_moves] unless uncheck_moves.empty?
     end
-
+    puts "unchecks: #{unchecks}"
     unchecks
   end
 
@@ -125,7 +128,7 @@ class Board
     sample_piece = sample[0]
     sample_move = sample[1].sample
     sample_move = sample[1] if checked?
-    return [piece_at(sample_piece[0], sample_piece[1]), sample_move] if @current_player.name == "black"
+    return [piece_at(sample_piece[0], sample_piece[1]), sample_move] if @current_player.name == "computer"
 
     puts "#{@current_player.name} player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
     input = gets.chomp!
@@ -225,16 +228,12 @@ class Board
     output
   end
 
-  def calculate_checks(player)
+  def calculate_checks(player = @current_player)
     output = []
     player.pieces.each do |piece|
       unless piece.is_a?(King)
-        checks = Array.new(2) {Array.new}
         moves = piece.check_moves(self)
-
-        checks[0] = piece.current_pos unless moves.empty?
-        checks[1].replace(moves) unless moves.empty?
-        output << checks unless moves.empty?
+        output << [piece.current_pos, moves] unless moves.empty?
       end
     end
     output
@@ -312,6 +311,60 @@ class Board
     @board[previous_pos[1]][previous_pos[0]] = ' '
     @board[move[1]][move[0]] = piece
 
+    # castle-special-move
+    if piece.is_a?(WhiteKing)
+      puts 'white-castle'
+      special_move = move[0] - previous_pos[0]
+
+      # white-right-castle
+      if special_move == 2
+        puts 'white-right-castle'
+        white_rook = piece_at(8, 1)
+        @board[1][6] = white_rook
+        white_rook.moves << [6, 1]
+        white_rook.current_pos = [6, 1]
+        @board[1][8] = ' '
+        puts "rook: #{white_rook.current_pos}"
+      end
+
+      # white-left-castle
+      if special_move == -2
+        puts 'white-left-castle'
+        white_rook = piece_at(1, 1)
+        @board[1][4] = white_rook
+        white_rook.moves << [4, 1]
+        white_rook.current_pos = [4, 1]
+        @board[1][1] = ' '
+      end
+    end
+
+    if piece.is_a?(BlackKing)
+      puts 'black-castle'
+      special_move = move[0] - previous_pos[0]
+
+      # black-right-castle
+      if special_move == 2
+        puts 'black-right-castle'
+        black_rook = piece_at(8, 8)
+        @board[8][6] = black_rook
+        black_rook.moves << [6, 8]
+        black_rook.current_pos = [6, 8]
+        @board[8][8] = ' '
+        puts "rook: #{black_rook.current_pos}"
+      end
+
+      # white-left-castle
+      if special_move == -2
+        puts 'black-left-castle'
+        black_rook = piece_at(1, 8)
+        @board[8][4] = black_rook
+        black_rook.moves << [4, 8]
+        black_rook.current_pos = [4, 8]
+        @board[8][1] = ' '
+        puts "rook: #{black_rook.current_pos}"
+      end
+    end
+
     print_board
     puts "#{@current_player.name} moved #{piece.avatar} at #{previous_pos} to #{move}."
   end
@@ -331,7 +384,7 @@ class Board
     return if random_piece.nil?
 
     random_move = sample[1].sample
-    random_move = sample[1] if checked?(player)
+
     puts "movable pieces=#{legals.size} legal moves= #{sample[1].size}"
     puts "piece:#{random_piece} move:#{random_move}"
 
@@ -343,7 +396,7 @@ class Board
       opposite_player.lost << target_piece
       opposite_player.pieces.delete(target_piece)
     end
-    
+
     @board[random_move[1]][random_move[0]] = piece
     piece.current_pos = [random_move[0], random_move[1]]
     @board[random_piece[1]][random_piece[0]] = ' '
