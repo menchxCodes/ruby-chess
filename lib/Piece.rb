@@ -45,7 +45,7 @@ class White < Piece
   attr_reader :name
 
   def initialize
-    @name = "white"
+    @name = "computer"
     @pieces = []
     @lost = []
   end
