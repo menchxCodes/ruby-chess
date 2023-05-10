@@ -43,24 +43,22 @@ class WhiteKing < King
       @legal_moves.delete(move) if black_king_moves.include?(move)
     end
 
-    right_castle = true
-    left_castle = true
+    right_castle = false
+    left_castle = false
 
     if castle?(board)
       opposite_moves = board.calculate_legals(board.player_two)
       opposite_moves.each do |piece_move|
         moves = piece_move[1]
-        if moves.include?([6, 1]) || moves.include?([7, 1])
-          right_castle = false
+        unless moves.include?([6, 1]) && moves.include?([7, 1])
+          right_castle = true
         end
 
-        if moves.include?([4, 1]) || moves.include?([3, 1]) || moves.include?([2, 1])
-          left_castle = false
+        unless moves.include?([4, 1]) && moves.include?([3, 1]) && moves.include?([2, 1])
+          left_castle = true
         end
       end
 
-      # @legal_moves << [7, 1] if right_castle
-      # @legal_moves << [3, 1] if left_castle
       @legal_moves << [7, 1] if right_castle
       @legal_moves << [3, 1] if left_castle
     end
@@ -113,24 +111,22 @@ class BlackKing < King
       @legal_moves.delete(move) if white_king_moves.include?(move)
     end
 
-    right_castle = true
-    left_castle = true
+    right_castle = false
+    left_castle = false
 
     if castle?(board)
       opposite_moves = board.calculate_legals(board.player_one)
       opposite_moves.each do |piece_move|
         moves = piece_move[1]
-        if moves.include?([6, 8]) || moves.include?([7, 8])
-          right_castle = false
+        unless moves.include?([6, 8]) && moves.include?([7, 8])
+          right_castle = true
         end
 
-        if moves.include?([4, 8]) || moves.include?([3, 8]) || moves.include?([2, 8])
-          left_castle = false
+        unless moves.include?([4, 8]) && moves.include?([3, 8]) && moves.include?([2, 8])
+          left_castle = true
         end
       end
 
-      # @legal_moves << [7, 8] if right_castle
-      # @legal_moves << [3, 8] if left_castle
       @legal_moves << [7, 8] if right_castle
       @legal_moves << [3, 8] if left_castle
     end
