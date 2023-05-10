@@ -106,7 +106,7 @@ class Board
 
   def play
     until draw? || win?
-      puts "\n"
+      puts "\nTurn #{@turn}"
       puts "#{@current_player.name}'s king is under check" if checked?(@current_player)
       piece_move = player_input
       piece = piece_move[0]
@@ -114,6 +114,7 @@ class Board
 
       do_move(piece, move[0], move[1])
       puts "#{@current_player.name} checks #{opposite_player.name}'s king" if checked?(@opposite_player)
+      @turn += 1
       change_player
     end
     puts "draw" if draw?
@@ -121,18 +122,49 @@ class Board
   end
 
   def player_input
-    sample = calculate_legals(@current_player).sample
-    sample = uncheck_moves.sample if checked?
+    puts "\n"
+    legals = calculate_legals(@current_player).shuffle
+    legals = uncheck_moves.shuffle if checked?
+    puts "legals= #{legals}"
 
+    sample = legals.sample
     sample_piece = sample[0]
     sample_move = sample[1].sample
-    sample_move = sample[1] if checked?
-    return [piece_at(sample_piece[0], sample_piece[1]), sample_move] if @current_player.name == "computer"
+    puts "sample= #{sample}"
+    puts "sample piece= #{sample_piece}"
+    puts "sample move= #{sample_move}"
+
+    if @current_player.name == "computer"
+      piece = piece_at(sample_piece[0], sample_piece[1])
+      try = try_legal_move(piece, sample_move[0], sample_move[1])
+      if try == "success"
+        return [piece_at(sample_piece[0], sample_piece[1]), sample_move] if try=="success"
+      else
+        until try == "success"
+          puts "legals= #{legals}"
+          sample = legals.sample
+          sample_piece = sample[0]
+          if sample_move.empty?
+            legals.delete(sample)
+            sample = legals.sample
+          else
+            sample_move = sample[1].pop
+          end
+          
+          piece = piece_at(sample_piece[0], sample_piece[1])
+          try = try_legal_move(piece, sample_move[0], sample_move[1])
+          
+          puts "sample= #{sample}"
+        end
+        return [piece_at(sample_piece[0], sample_piece[1]), sample_move]
+      end
+    end
 
     puts "#{@current_player.name} player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
     input = gets.chomp!
 
     until valid_input?(input)
+      puts "\n"
       puts "#{@current_player.name} player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
       input = gets.chomp!
     end
@@ -172,15 +204,34 @@ class Board
 
     move = [move_input[0].to_i, move_input[1].to_i]
     unless piece.legal_moves(self).include?(move)
-      puts "illegal move #{move}"
+      puts "illegal move #{move} for #{piece.avatar} at #{piece.current_pos}"
       return false
     end
 
     if checked?
-      unless uncheck_moves.include?(move)
-        puts 'move will not remove your check status'
-        return false
+      # puts "legals"
+      # p calculate_legals(@current_player)
+      # puts "unchecks"
+      # p uncheck_moves
+      uncheck_moves.each do |piece_move|
+        # puts "uncheck"
+        
+        if piece.current_pos == piece_move[0]
+          piece_move[1].each do |m|
+            puts "#{piece.current_pos} #{m}"
+            return true if move == m
+          end
+        end
       end
+
+      puts "move #{move} for #{piece.avatar} at #{piece.current_pos} will not remove your check status"
+      return false
+
+    end
+
+    if try_legal_move(piece, move[0], move[1]) == "failure"
+      puts "move #{move} for #{piece.avatar} at #{piece.current_pos} will result in a check for your king"
+      return false
     end
 
     true
@@ -312,7 +363,7 @@ class Board
 
     # castle-special-move
     if piece.is_a?(WhiteKing)
-      puts 'white-castle'
+      # puts 'white-castle'
       special_move = move[0] - previous_pos[0]
 
       # white-right-castle
@@ -338,7 +389,7 @@ class Board
     end
 
     if piece.is_a?(BlackKing)
-      puts 'black-castle'
+      # puts 'black-castle'
       special_move = move[0] - previous_pos[0]
 
       # black-right-castle
