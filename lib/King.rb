@@ -47,28 +47,36 @@ class WhiteKing < King
     left_castle = false
 
     if castle?(board)
-      opposite_moves = board.calculate_legals(board.player_two)
-      opposite_moves.each do |piece_move|
-        moves = piece_move[1]
-        unless moves.include?([6, 1]) && moves.include?([7, 1])
-          right_castle = true
-        end
+      # opposite_moves = board.calculate_legals(board.player_two)
+      # opposite_moves.each do |piece_move|
+      #   moves = piece_move[1]
+      #   unless moves.include?([6, 1]) && moves.include?([7, 1])
+      #     right_castle = true if right_castle?(board)
+      #   end
 
-        unless moves.include?([4, 1]) && moves.include?([3, 1]) && moves.include?([2, 1])
-          left_castle = true
-        end
-      end
+      #   unless moves.include?([4, 1]) && moves.include?([3, 1]) && moves.include?([2, 1])
+      #     left_castle = true if left_castle?(board)
+      #   end
+      # end
 
-      @legal_moves << [7, 1] if right_castle
-      @legal_moves << [3, 1] if left_castle
+      @legal_moves << [7, 1] if right_castle?(board)
+      @legal_moves << [3, 1] if left_castle?(board)
     end
     @legal_moves
   end
 
-  def castle?(board)
-    return false if board.checked?(board.player_one)
+  def right_castle?(board)
+    # return false if board.checked?(board.player_one)
     return true if @moves.empty? && board.piece_at(6, 1) == ' ' && board.piece_at(7, 1) == ' ' && board.piece_at(8, 1).is_a?(WhiteRook) && board.piece_at(8, 1).moves.empty?
+  end
+
+  def left_castle?(board)
+    # return false if board.checked?(board.player_one)
     return true if @moves.empty? && board.piece_at(4, 1) == ' ' && board.piece_at(3, 1) == ' ' && board.piece_at(2, 1) == ' ' && board.piece_at(1, 1).is_a?(WhiteRook) && board.piece_at(1, 1).moves.empty?
+  end
+
+  def castle?(board)
+    right_castle?(board) || left_castle?(board)
   end
 
   def influence
@@ -115,28 +123,36 @@ class BlackKing < King
     left_castle = false
 
     if castle?(board)
-      opposite_moves = board.calculate_legals(board.player_one)
-      opposite_moves.each do |piece_move|
-        moves = piece_move[1]
-        unless moves.include?([6, 8]) && moves.include?([7, 8])
-          right_castle = true
-        end
+      # opposite_moves = board.calculate_legals(board.player_one)
+      # opposite_moves.each do |piece_move|
+      #   moves = piece_move[1]
+      #   unless moves.include?([6, 8]) || moves.include?([7, 8])
+      #     right_castle = true if right_castle?(board)
+      #   end
 
-        unless moves.include?([4, 8]) && moves.include?([3, 8]) && moves.include?([2, 8])
-          left_castle = true
-        end
-      end
+      #   unless moves.include?([4, 8]) || moves.include?([3, 8]) || moves.include?([2, 8])
+      #     left_castle = true if left_castle?(board)
+      #   end
+      # end
 
-      @legal_moves << [7, 8] if right_castle
-      @legal_moves << [3, 8] if left_castle
+      @legal_moves << [7, 8] if right_castle?(board)
+      @legal_moves << [3, 8] if left_castle?(board)
     end
     @legal_moves
   end
 
-  def castle?(board)
-    return false if board.checked?(board.player_two)
+  def right_castle?(board)
+    # return false if board.checked?(board.player_two)
     return true if @moves.empty? && board.piece_at(6, 8) == ' ' && board.piece_at(7, 8) == ' ' && board.piece_at(8, 8).is_a?(BlackRook) && board.piece_at(8, 8).moves.empty?
+  end
+
+  def left_castle?(board)
+    # return false if board.checked?(board.player_two)
     return true if @moves.empty? && board.piece_at(4, 8) == ' ' && board.piece_at(3, 8) == ' ' && board.piece_at(2, 8) == ' ' && board.piece_at(1, 8).is_a?(BlackRook) && board.piece_at(1, 8).moves.empty?
+  end
+
+  def castle?(board)
+    right_castle?(board) || left_castle?(board)
   end
 
   def influence
