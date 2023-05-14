@@ -15,35 +15,49 @@ class Board
     @player_two = Black.new
     @current_player = @player_one
     @turn = 0
-    @temp = "checks:"
   end
 
   def draw?
     # dead position king vs king
-    return true if @current_player.pieces.size == 1 && opposite_player.pieces.size == 1
+    if @current_player.pieces.size == 1 && opposite_player.pieces.size == 1
+      puts "draw: king vs king"
+      return true
+    end
 
     # dead position king vs king & bishop or king & knight
     if @current_player.pieces.size == 1 && opposite_player.pieces.size == 2
       opposite_player.pieces.each do |piece|
-        return true if piece.is_a?(WhiteKnight) || piece.is_a?(BlackKnight)
+        if piece.is_a?(WhiteKnight) || piece.is_a?(BlackKnight)
+          puts "draw:king vs king & knight"
+          return true
+        end
       end
     end
 
     if @current_player.pieces.size == 2 && opposite_player.pieces.size == 1
       @current_player.pieces.each do |piece|
-        return true if piece.is_a?(WhiteKnight) || piece.is_a?(BlackKnight)
+        if piece.is_a?(WhiteKnight) || piece.is_a?(BlackKnight)
+          puts "draw:king vs king & knight"
+          return true
+        end
       end
     end
 
     if @current_player.pieces.size == 1 && opposite_player.pieces.size == 2
       opposite_player.pieces.each do |piece|
-        return true if piece.is_a?(WhiteBishop) || piece.is_a?(BlackBishop)
+        if piece.is_a?(WhiteBishop) || piece.is_a?(BlackBishop)
+          puts "draw:king vs king & bishop"
+          return true
+        end
       end
     end
 
     if @current_player.pieces.size == 2 && opposite_player.pieces.size == 1
       @current_player.pieces.each do |piece|
-        return true if piece.is_a?(WhiteBishop) || piece.is_a?(BlackBishop)
+        if piece.is_a?(WhiteBishop) || piece.is_a?(BlackBishop)
+          puts "draw:king vs king & bishop"
+          return true
+        end
       end
     end
 
@@ -52,18 +66,48 @@ class Board
       first_bishop = @current_player.pieces.select { |piece| piece.is_a?(WhiteBishop) || piece.is_a?(BlackBishop) }
       second_bishop = @current_player.pieces.select { |piece| piece.is_a?(WhiteBishop) || piece.is_a?(BlackBishop) }
       unless first_bishop.empty? || second_bishop.empty?
-        return true if first_bishop[0].start_pos == [6, 1] && second_bishop[0].start_pos == [3, 8]
-        return true if second_bishop[0].start_pos == [6, 1] && first_bishop[0].start_pos == [3, 8]
+        if first_bishop[0].start_pos == [6, 1] && second_bishop[0].start_pos == [3, 8]
+          puts "draw: king & bishop vs king & bishop of the same square color"
+          return true
+        end
+
+        if second_bishop[0].start_pos == [6, 1] && first_bishop[0].start_pos == [3, 8]
+          puts "draw: king & bishop vs king & bishop of the same square color"
+          return true
+        end
       end
+
       unless first_bishop.empty? || second_bishop.empty?
-        return true if first_bishop[0].start_pos == [3, 1] && second_bishop[0].start_pos == [1, 8]
-        return true if second_bishop[0].start_pos == [3, 1] && first_bishop[0].start_pos == [1, 8]
+        if first_bishop[0].start_pos == [3, 1] && second_bishop[0].start_pos == [1, 8]
+          puts "draw: king & bishop vs king & bishop of the same square color"
+          return true
+        end
+
+        if second_bishop[0].start_pos == [3, 1] && first_bishop[0].start_pos == [1, 8]
+          puts "draw: king & bishop vs king & bishop of the same square color"
+          return true
+        end
       end
     end
 
     # stalemate
-    if !checked?(@current_player) && calculate_legals(@current_player).empty?
-      puts 'stalemate'
+    current_legals = calculate_legals(@current_player)
+    current_legals.each do |piece_moves|
+      piece = piece_at(piece_moves[0][0], piece_moves[0][1])
+      piece_moves[1].each do |move|
+        try = try_legal_move(piece, move[0], move[1])
+        if try == "failure"
+          piece_moves[1].delete(move)
+        end
+      end
+
+      if piece_moves[1].empty?
+        current_legals.delete(piece_moves)
+      end
+    end
+
+    if !checked?(@current_player) && current_legals.empty?
+      puts 'draw: stalemate'
       return true
     end
 
@@ -107,32 +151,31 @@ class Board
   def play
     until draw? || win?
       puts "\nTurn #{@turn}"
-      puts "#{@current_player.name}'s king is under check" if checked?(@current_player)
+      puts "#{@current_player.name}(#{@current_player.color})'s king is under check" if checked?(@current_player)
       piece_move = player_input
       piece = piece_move[0]
       move = piece_move[1]
 
       do_move(piece, move[0], move[1])
-      puts "#{@current_player.name} checks #{opposite_player.name}'s king" if checked?(@opposite_player)
+      puts "#{@current_player.name}(#{@current_player.color}) checks #{opposite_player.name}(#{opposite_player.color})'s king" if checked?(@opposite_player)
       @turn += 1
       change_player
     end
-    puts "draw" if draw?
-    puts "#{opposite_player.name} wins!" if win?
+    puts "#{opposite_player.name}(#{opposite_player.color}) wins!" if win?
   end
 
   def player_input
     puts "\n"
     legals = calculate_legals(@current_player).shuffle
     legals = uncheck_moves.shuffle if checked?
-    puts "legals= #{legals}"
+    # puts "legals= #{legals}"
 
     sample = legals.sample
     sample_piece = sample[0]
     sample_move = sample[1].sample
-    puts "sample= #{sample}"
-    puts "sample piece= #{sample_piece}"
-    puts "sample move= #{sample_move}"
+    # puts "sample= #{sample}"
+    # puts "sample piece= #{sample_piece}"
+    # puts "sample move= #{sample_move}"
 
     if @current_player.name == "computer"
       piece = piece_at(sample_piece[0], sample_piece[1])
@@ -140,32 +183,31 @@ class Board
       if try == "success"
         return [piece_at(sample_piece[0], sample_piece[1]), sample_move] if try=="success"
       else
-        until try == "success"
-          puts "legals= #{legals}"
+        until try == "success" || legals.empty? || sample[1].empty?
           sample = legals.sample
           sample_piece = sample[0]
-          if sample_move.empty?
+          if sample_move.nil?
             legals.delete(sample)
             sample = legals.sample
           else
             sample_move = sample[1].pop
           end
-          
+
           piece = piece_at(sample_piece[0], sample_piece[1])
-          try = try_legal_move(piece, sample_move[0], sample_move[1])
-          
           puts "sample= #{sample}"
+          puts "legals= #{legals}"
+          try = try_legal_move(piece, sample_move[0], sample_move[1])
         end
         return [piece_at(sample_piece[0], sample_piece[1]), sample_move]
       end
     end
 
-    puts "#{@current_player.name} player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
+    puts "#{@current_player.name}(#{@current_player.color}) player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
     input = gets.chomp!
 
     until valid_input?(input)
       puts "\n"
-      puts "#{@current_player.name} player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
+      puts "#{@current_player.name}(#{@current_player.color}) player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
       input = gets.chomp!
     end
 
@@ -215,7 +257,6 @@ class Board
       # p uncheck_moves
       uncheck_moves.each do |piece_move|
         # puts "uncheck"
-        
         if piece.current_pos == piece_move[0]
           piece_move[1].each do |m|
             puts "#{piece.current_pos} #{m}"
@@ -235,19 +276,6 @@ class Board
     end
 
     true
-  end
-
-  def random_loop
-    until draw? || win?
-      @turn += 1
-      do_random_legal_move(@current_player)
-      print_board
-      puts @turn
-      change_player
-      puts "#{@current_player.name} turn"
-    end
-    puts "draw!" if draw?
-    puts "check-mate by #{opposite_player.name}" if win?
   end
 
   def change_player(player = @current_player)
@@ -416,40 +444,7 @@ class Board
     end
 
     print_board
-    puts "#{@current_player.name} moved #{piece.avatar} at #{previous_pos} to #{move}."
-  end
-
-  def do_random_legal_move(player)
-    legals = calculate_legals(player)
-    if checked?(player)
-      legals = uncheck_moves(player)
-      if legals.size.zero?
-        puts "wtf"
-      end
-    end
-    puts "uncheck moves: #{uncheck_moves(player)}" if checked?(player)
-
-    sample = legals.sample
-    random_piece = sample[0]
-    return if random_piece.nil?
-
-    random_move = sample[1].sample
-
-    puts "movable pieces=#{legals.size} legal moves= #{sample[1].size}"
-    puts "piece:#{random_piece} move:#{random_move}"
-
-    piece = piece_at(random_piece[0], random_piece[1])
-    piece.moves.push(random_move)
-    target_piece = piece_at(random_move[0], random_move[1])
-
-    if target_piece.is_a?(Piece)
-      opposite_player.lost << target_piece
-      opposite_player.pieces.delete(target_piece)
-    end
-
-    @board[random_move[1]][random_move[0]] = piece
-    piece.current_pos = [random_move[0], random_move[1]]
-    @board[random_piece[1]][random_piece[0]] = ' '
+    puts "#{@current_player.name}(#{@current_player.color}) moved #{piece.avatar} at #{previous_pos} to #{move}."
   end
 
   def create_board
