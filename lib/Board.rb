@@ -194,8 +194,6 @@ class Board
           end
 
           piece = piece_at(sample_piece[0], sample_piece[1])
-          puts "sample= #{sample}"
-          puts "legals= #{legals}"
           try = try_legal_move(piece, sample_move[0], sample_move[1])
         end
         return [piece_at(sample_piece[0], sample_piece[1]), sample_move]
@@ -388,6 +386,23 @@ class Board
     piece.current_pos = move
     @board[previous_pos[1]][previous_pos[0]] = ' '
     @board[move[1]][move[0]] = piece
+
+    # pawn-promotion
+    if piece.is_a?(WhitePawn) && move[1] == 8
+      promoted_piece = WhiteQueen.new(move[0], move[1])
+      @board[move[1]][move[0]] = promoted_piece
+      @player_one.pieces.delete(piece)
+      @player_one.pieces << promoted_piece
+      puts "#{@player_one.name}(#{@player_one.color})'s #{piece.avatar} at #{move} was promoted to #{promoted_piece.avatar}"
+    end
+
+    if piece.is_a?(BlackPawn) && move[1] == 1
+      promoted_piece = BlackQueen.new(move[0], move[1])
+      @board[move[1]][move[0]] = promoted_piece
+      @player_two.pieces.delete(piece)
+      @player_two.pieces << promoted_piece
+      puts "#{@player_two.name}(#{@player_two.color})'s #{piece.avatar} at #{move} was promoted to #{promoted_piece.avatar}"
+    end
 
     # castle-special-move
     if piece.is_a?(WhiteKing)
