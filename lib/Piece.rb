@@ -41,11 +41,11 @@ end
 
 # White class is to be used for all non-king white pieces.
 class White < Piece
-  attr_accessor :pieces, :lost
-  attr_reader :name, :color
+  attr_accessor :pieces, :lost, :name
+  attr_reader :color
 
   def initialize
-    @name = "computer"
+    @name = "you"
     @color = "white"
     @pieces = []
     @lost = []
