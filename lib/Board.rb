@@ -17,6 +17,31 @@ class Board
     @turn = 0
   end
 
+  def save
+    Dir.mkdir("save") unless Dir.exist?("save")
+    save_file = File.open("save/save_1.txt","w")
+    save_file.puts Marshal.dump(self)
+    save_file.close
+  end
+
+  def print_moves
+    if checked?
+      move_list = uncheck_moves(@current_player)
+    else
+      move_list = calculate_legals(@current_player)
+    end
+
+    move_list.each do |piece_move|
+      output_string = ""
+      piece = piece_at(piece_move[0][0], piece_move[0][1])
+      output_string.concat("#{piece.avatar} @ #{piece_move[0]} ->")
+      piece_move[1].each do |move|
+        output_string.concat(" #{move}")
+      end
+      puts output_string
+    end
+  end
+
   def draw?
     # dead position king vs king
     if @current_player.pieces.size == 1 && opposite_player.pieces.size == 1
@@ -168,15 +193,13 @@ class Board
     puts "\n"
     legals = calculate_legals(@current_player).shuffle
     legals = uncheck_moves.shuffle if checked?
-    # puts "legals= #{legals}"
 
     sample = legals.sample
     sample_piece = sample[0]
     sample_move = sample[1].sample
-    # puts "sample= #{sample}"
-    # puts "sample piece= #{sample_piece}"
-    # puts "sample move= #{sample_move}"
 
+
+    # AI move
     if @current_player.name == "computer"
       piece = piece_at(sample_piece[0], sample_piece[1])
       try = try_legal_move(piece, sample_move[0], sample_move[1])
@@ -201,16 +224,32 @@ class Board
     end
 
     puts "#{@current_player.name}(#{@current_player.color}) player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
+    puts "other options: save | print | legals"
     input = gets.chomp!
+    case input.downcase
+    when "legals"
+      print_moves
+    when "save"
+      save
+      puts "Game saved successfully."
+    when "print"
+      print_board
+    end
 
     until valid_input?(input)
       puts "\n"
       puts "#{@current_player.name}(#{@current_player.color}) player, please select the piece and move. example: #{sample_piece.join('')} #{sample_move.join('')}"
+      puts "other options: save | print | legals"
       input = gets.chomp!
+      case input.downcase
+      when "legals"
+        print_moves
+      when "save"
+        save
+      end
     end
 
     output = input.split(' ')
-    # puts "got #{output} as input"
     piece_input = output[0].split('')
     move_input = output[1].split('')
 
